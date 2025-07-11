@@ -1,6 +1,11 @@
-#include "stdio.h"
+#include "game.h"
 
 int main() {
-    printf("Hello!\n");
+    Game* game = game_create();
+    while (game_is_running(game)) {
+        game_update(game);
+    }
+    game_destroy(game);
+
     return 0;
 }
