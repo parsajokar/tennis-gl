@@ -24,6 +24,8 @@ target_sources(
     src/renderer.c
     src/matrix.h
     src/matrix.c
+    src/paddle.h
+    src/paddle.c
 )
 
 target_include_directories(

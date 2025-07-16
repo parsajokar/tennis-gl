@@ -82,9 +82,9 @@ Renderer* renderer_create() {
 
     ProjectionSpec projection_spec = {
         .left = 0.0,
-        .right = (float)GAME_WIDTH,
+        .right = GAME_WIDTH,
         .bottom = 0.0,
-        .top = (float)GAME_HEIGHT,
+        .top = GAME_HEIGHT,
         .near = 0.1,
         .far = 100.0
     };
