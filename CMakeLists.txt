@@ -22,6 +22,8 @@ target_sources(
     src/game.c
     src/renderer.h
     src/renderer.c
+    src/matrix.h
+    src/matrix.c
 )
 
 target_include_directories(

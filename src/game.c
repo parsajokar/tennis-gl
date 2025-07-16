@@ -13,8 +13,11 @@ struct _Game {
 Game* game_create() {
     Game* self = malloc(sizeof(Game));
     glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-    self->window = glfwCreateWindow(1280, 720, "tennis-gl", NULL, NULL);
+    self->window = glfwCreateWindow(GAME_WIDTH, GAME_HEIGHT, "tennis-gl", NULL, NULL);
     glfwMakeContextCurrent(self->window);
 
     self->renderer = renderer_create();
@@ -38,8 +41,15 @@ bool game_is_running(const Game* self) {
 void game_update(Game* self) {
     glfwPollEvents();
 
+    Rect rect = {
+        .x = 100.0,
+        .y = 100.0,
+        .w = 100.0,
+        .h = 100.0
+    };
+
     renderer_clear(self->renderer);
-    renderer_draw_rect(self->renderer, NULL);
+    renderer_draw_rect(self->renderer, &rect);
 
     glfwSwapBuffers(self->window);
 }

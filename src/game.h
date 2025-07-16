@@ -3,6 +3,9 @@
 
 #include "stdbool.h"
 
+#define GAME_WIDTH 1280
+#define GAME_HEIGHT 720
+
 typedef struct _Game Game;
 
 Game* game_create();

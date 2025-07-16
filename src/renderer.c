@@ -2,6 +2,8 @@
 #include "GLFW/glfw3.h"
 #include "stdlib.h"
 
+#include "game.h"
+#include "matrix.h"
 #include "renderer.h"
 
 struct _Renderer {
@@ -13,6 +15,8 @@ struct _Renderer {
     } clear_color;
 
     uint32_t program;
+    int32_t uniform_projection_location;
+    int32_t uniform_transform_location;
     uint32_t vertex_array;
     uint32_t array_buffer;
     uint32_t element_array_buffer;
@@ -31,9 +35,9 @@ Renderer* renderer_create() {
 
     gladLoadGL(glfwGetProcAddress);
 
-    self->clear_color.r = 0.1;
-    self->clear_color.g = 0.1;
-    self->clear_color.b = 0.1;
+    self->clear_color.r = 0.0;
+    self->clear_color.g = 0.0;
+    self->clear_color.b = 0.0;
     self->clear_color.a = 1.0;
 
     const char* vert_source =
@@ -41,8 +45,11 @@ Renderer* renderer_create() {
         "\n"
         "layout(location = 0) in vec3 a_Position;\n"
         "\n"
+        "uniform mat4 u_Projection;\n"
+        "uniform mat4 u_Transform;\n"
+        "\n"
         "void main() {\n"
-        "    gl_Position = vec4(a_Position, 1.0);\n"
+        "    gl_Position = u_Projection * u_Transform * vec4(a_Position, 1.0);\n"
         "}\n";
     const char* frag_source =
         "#version 330 core\n"
@@ -50,7 +57,7 @@ Renderer* renderer_create() {
         "layout(location = 0) out vec4 o_Color;\n"
         "\n"
         "void main() {\n"
-        "    o_Color = vec4(0.2, 0.3, 0.8, 1.0);\n"
+        "    o_Color = vec4(1.0, 1.0, 1.0, 1.0);\n"
         "}\n";
 
     self->program = glCreateProgram();
@@ -68,6 +75,21 @@ Renderer* renderer_create() {
 
     glDeleteShader(vert_shader);
     glDeleteShader(frag_shader);
+
+    glUseProgram(self->program);
+    self->uniform_projection_location = glGetUniformLocation(self->program, "u_Projection");
+    self->uniform_transform_location = glGetUniformLocation(self->program, "u_Transform");
+
+    ProjectionSpec projection_spec = {
+        .left = 0.0,
+        .right = (float)GAME_WIDTH,
+        .bottom = 0.0,
+        .top = (float)GAME_HEIGHT,
+        .near = 0.1,
+        .far = 100.0
+    };
+    Mat4 projection = get_projection(&projection_spec);
+    glUniformMatrix4fv(self->uniform_projection_location, 1, GL_FALSE, projection.data);
 
     float vertices[] = {
         0.0, 0.0, 0.0,
@@ -116,7 +138,7 @@ void renderer_clear(const Renderer* self) {
 }
 
 void renderer_draw_rect(const Renderer* self, const Rect* rect) {
-    glUseProgram(self->program);
-    glBindVertexArray(self->vertex_array);
+    Mat4 transform = get_transform(rect);
+    glUniformMatrix4fv(self->uniform_transform_location, 1, GL_FALSE, transform.data);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 }
