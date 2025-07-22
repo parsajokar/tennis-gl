@@ -26,6 +26,8 @@ target_sources(
     src/matrix.c
     src/paddle.h
     src/paddle.c
+    src/ball.h
+    src/ball.c
 )
 
 target_include_directories(

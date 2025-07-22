@@ -3,10 +3,6 @@
 #include "game.h"
 #include "paddle.h"
 
-#define PADDLE_WIDTH 10.0
-#define PADDLE_HEIGHT 100.0
-#define PADDLE_SPEED 800.0
-
 struct _Paddle {
     Rect rect;
     uint32_t up_key;

@@ -5,6 +5,10 @@
 
 #include "renderer.h"
 
+#define PADDLE_WIDTH 10.0
+#define PADDLE_HEIGHT 100.0
+#define PADDLE_SPEED 800.0
+
 typedef struct _Paddle Paddle;
 
 typedef enum {
